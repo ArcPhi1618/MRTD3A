@@ -1,22 +1,21 @@
 module registers (
-    	input clk, rst,
-    	input pc_inc,
-    	input [7:0] data_in,
-    	output reg [7:0] data_out,
-    	output reg [7:0] addr_reg
+    input clk,
+    input rst,
+    input pc_inc,
+    input acc_we,
+    input [7:0] acc_data,
+    output reg [7:0] accumulator,
+    output reg [7:0] pc_out
 );
-    	reg [7:0] pc;
-    	reg [7:0] w_reg;
-    
-    	always @(posedge clk or posedge rst) begin
-    	    	if (rst) begin
-            		pc <= 8'b00000000;
-            		w_reg <= 8'b00000000;
-            		addr_reg <= 8'b00000000;
-        	end else begin
-            		if (pc_inc) pc <= pc + 1;
-            		addr_reg <= pc;
-            		data_out <= w_reg;
-        	end
-    	end
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            accumulator <= 8'b0;
+            pc_out <= 8'b0;
+        end else begin
+            if (pc_inc)
+                pc_out <= pc_out + 8'b1;
+            if (acc_we)
+                accumulator <= acc_data;
+        end
+    end
 endmodule
